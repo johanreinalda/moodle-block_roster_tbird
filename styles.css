@@ -1,0 +1,172 @@
+.roster_tbird_content {
+/*  text-align: center; */
+  text-align: left;
+}
+
+
+/*------------------------------*/
+
+.roster_tbird_list_names {
+  width: 75%;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: auto;
+}
+
+.roster_tbird_list_names .userinfo_section {
+  text-align: left;
+}
+
+.roster_tbird_list_names .userinfo_section .infoblock {
+  float: left;
+  margin-right: 10px;
+}
+
+.roster_tbird_list_names .userinfo_courserole {
+  width: 90px;
+}
+.roster_tbird_list_names .userinfo_fullname {
+  width: 180px;
+}
+.roster_tbird_list_names .userinfo_username {
+  width: 90px;
+}
+
+/*------------------------------*/
+
+.roster_tbird_list_pics {
+  width: 85%;
+  margin: 10px auto;
+}
+
+.roster_tbird_list_pics .userinfo_section {
+/*  float: left; */
+/*  display: inline; */
+/*  width: 200px; */
+  margin: 10px;
+/*  text-align: center;*/
+  text-align: left;
+}
+
+.roster_tbird_list_pics .userinfo_section .infoblock_pic {
+  margin: 2px auto;
+}
+
+.roster_tbird_list_pics .userinfo_section .infoblock_pic .userinfo_fullname {
+  margin-top: -6px;
+  padding: 0px;
+  font-size: 10px;
+}
+.roster_tbird_list_pics .userinfo_section .infoblock_pic .userinfo_courserole {
+  margin-top: -6px;
+  padding: 0px;
+  font-size: 10px;
+  font-style: italic;
+}
+
+/*------------------------------*/
+
+.roster_tbird_list_full {
+  width: 85%;
+  margin: 10px auto;
+}
+
+.roster_tbird_list_full .userinfo_section {
+  /*float: left;*/
+  margin-top: 12px;
+  margin-right: 10px;
+}
+
+.roster_tbird_list_full .userinfo_section .infoblock_pic {
+  text-align: center;
+  width: 150px; 
+  float: left;
+  margin-right: 6px;
+}
+.roster_tbird_list_full .userinfo_section .infoblock_pic .userinfo_fullname {
+  margin-top: -6px;
+  padding: 0px;
+  font-size: 10px;
+}
+.roster_tbird_list_full .userinfo_section .infoblock_pic .userinfo_courserole {
+  margin-top: -6px;
+  padding: 0px;
+  font-size: 10px;
+  font-style: italic;
+}
+
+.roster_tbird_list_full .userinfo_section .infoblock_nonpic {
+  text-align: left;
+  float: left;
+  /*width: 300px;*/
+  margin-right: 12px;
+}
+
+/*------------------------------*/
+
+.roster_tbird_list_description {
+  width: 85%;
+  margin: 10px auto;
+}
+
+.roster_tbird_list_description .userinfo_section {
+  /*float: left;*/
+  margin-top: 12px;
+  margin-right: 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: gray;
+}
+
+.roster_tbird_list_description .userinfo_section .infoblock_pic {
+  text-align: center;
+  width: 150px; 
+  float: left;
+  margin-right: 6px;
+}
+.roster_tbird_list_description .userinfo_section .infoblock_pic .userinfo_fullname {
+  margin-top: -6px;
+  padding: 0px;
+  font-size: 10px;
+}
+.roster_tbird_list_description .userinfo_section .infoblock_pic .userinfo_courserole {
+  margin-top: -6px;
+  padding: 0px;
+  font-size: 10px;
+  font-style: italic;
+}
+
+.roster_tbird_list_description .userinfo_section .infoblock_nonpic {
+  text-align: left;
+  float: left;
+  /*width: 300px;*/
+  margin-right: 12px;
+}
+
+.roster_tbird_list_description .userinfo_section .infoblock_description {
+  text-align: left;
+  float: left;
+  /*width: 300px;*/
+  margin-right: 40px;
+  margin-left: 40px;
+}
+
+/*------------------------------*/
+
+.roster_tbird_other_links {
+    text-align: center;
+    margin: 10px auto;
+}
+
+.selected_mode_text {
+    font-weight: bold;
+}
+
+.roster_tbird_table {
+  width: 100%; 
+  margin: 10px auto;
+  border-width: 1px;
+  border-style: solid;
+  border-color: gray;
+}
