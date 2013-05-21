@@ -15,16 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * HTML block caps.
  *
- * @package    block
- * @subpackage course_list
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @package    block_roster_tbird
+ * @copyright  Johan Reinalda <johan@reinalda.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2013052000;
-$plugin->requires  = 2012112900;        // Requires this Moodle version
-$plugin->component = 'block_roster_tbird'; // Full name of the plugin (used for diagnostics)
+$capabilities = array(
+
+    'block/roster_tbird:addinstance' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ),
+);
+
