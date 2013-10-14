@@ -16,10 +16,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for editing HTML block instances.
+ * Block showing course roster
  *
- * @package   block_html
- * @copyright 2009 Tim Hunt
+ * @package   block_roster_tbird
+ * @copyright 2013 onwards Johan Reinalda (http://www.thunderbird.edu)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

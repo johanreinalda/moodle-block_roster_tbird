@@ -15,6 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Block showing course roster
+ *
+ * @package   block_roster_tbird
+ * @copyright 2013 onwards Johan Reinalda (http://www.thunderbird.edu)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once($CFG->dirroot.'/blocks/roster_tbird/lib.php');
 
 /**
