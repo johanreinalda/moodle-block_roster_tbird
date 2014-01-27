@@ -67,6 +67,23 @@ class block_roster_tbird extends block_list {
         	return $this->content;
         }
         
+        if (empty($this->config)) {
+        	$this->config = new stdClass();
+        }
+        
+        if (empty($this->config->flaglinknames)) {
+        	$this->config->flaglinknames = 1;
+        }
+        //if (empty($this->config->flaglinkfull)) {
+        //	$this->config->flaglinkfull = 1;
+        //}
+        if (empty($this->config->flaglinkdescription)) {
+        	$this->config->flaglinkdescription = 1;
+        }
+        if (empty($this->config->flaglinkusermanagement)) {
+        	$this->config->flaglinkusermanagement = 1;
+        }
+        
         $this->content =  new stdClass;
         
         $coursecontext = context_course::instance($COURSE->id);
