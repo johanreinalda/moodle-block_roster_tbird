@@ -61,21 +61,22 @@
             'id' => $courseid));
 
     if ($contextid) {
-        $context = get_context_instance_by_id($contextid, MUST_EXIST);
+        $context = context::instance_by_id($contextid, MUST_EXIST);
         if ($context->contextlevel != CONTEXT_COURSE) {
             print_error('invalidcontext');
         }
         $course = $DB->get_record('course', array('id'=>$context->instanceid), '*', MUST_EXIST);
     } else {
-    	error('Invalid context id');
+    	$course = $DB->get_record('course', array('id'=>$courseid), '*', MUST_EXIST);
+    	$context = context_course::instance($course->id, MUST_EXIST);
     }
     // not needed anymore
     //unset($contextid); //needed below
     unset($courseid);
-
+    
     require_login($course);
 
-    $systemcontext = get_context_instance(CONTEXT_SYSTEM);
+    $systemcontext = context_system::instance();
 
     if ($course->id == SITEID) {	//should not happen because block() applicable_formats.
     	error('Roster only works in courses');
@@ -315,6 +316,7 @@
 
     // we are looking for all users with this role assigned in this context or higher
     $contextlist = get_related_contexts_string($context);
+    //$contextlist = $context->get_parent_context_ids(true);
 
     //list($esql, $params) = get_enrolled_sql($context, NULL, $currentgroup, true);
     list($esql, $params) = get_enrolled_sql($context, NULL, NULL, true);
@@ -337,10 +339,17 @@
     }
 
     // performance hacks - we preload user contexts together with accounts
-    list($ccselect, $ccjoin) = context_instance_preload_sql('u.id', CONTEXT_USER, 'ctx');
+    //list($ccselect, $ccjoin) = context_instance_preload_sql('u.id', CONTEXT_USER, 'ctx');
+    //$select .= $ccselect;
+    //$joins[] = $ccjoin;
+
+    // performance hacks - we preload user contexts together with accounts
+    $ccselect = ', ' . context_helper::get_preload_record_columns_sql('ctx');
+    $ccjoin = "LEFT JOIN {context} ctx ON (ctx.instanceid = u.id AND ctx.contextlevel = :contextlevel)";
+    $params['contextlevel'] = CONTEXT_USER;
     $select .= $ccselect;
     $joins[] = $ccjoin;
-
+    
 
     // limit list to users with some role only
     
@@ -449,8 +458,8 @@
 
                     context_instance_preload($user);
 
-                    $context = get_context_instance(CONTEXT_COURSE, $course->id);
-                    $usercontext = get_context_instance(CONTEXT_USER, $user->id);
+                    $context = context_course::instance($course->id);
+                    $usercontext = context_user::instance($user->id);
 
                     $countries = get_string_manager()->get_list_of_countries();
 
@@ -468,7 +477,7 @@
                     $row->cells[0] = new html_table_cell();
                     $row->cells[0]->attributes['class'] = 'left side';
 
-                    $row->cells[0]->text = $OUTPUT->user_picture($user, array('size' => 100, 'courseid'=>$course->id));
+                    $row->cells[0]->text = $OUTPUT->user_picture($user, array('size' => 150, 'courseid'=>$course->id));
                     $row->cells[1] = new html_table_cell();
                     $row->cells[1]->attributes['class'] = 'content';
 
@@ -578,7 +587,7 @@ if(false) {
                 }
                 $usersprinted[] = $user->id; /// Add new user to the array of users printed
 
-                context_instance_preload($user);
+                context_helper::preload_from_record($user);
 
                 if ($user->lastaccess) {
                     $lastaccess = format_time(time() - $user->lastaccess, $datestring);
@@ -598,7 +607,8 @@ if(false) {
                     }
                 }
 
-                $usercontext = get_context_instance(CONTEXT_USER, $user->id);
+                $context = context_course::instance($course->id);
+                $usercontext = context_user::instance($user->id);
 
                 if ($piclink = ($USER->id == $user->id || has_capability('moodle/user:viewdetails', $context) || has_capability('moodle/user:viewdetails', $usercontext))) {
                     $profilelink = '<strong><a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$course->id.'">'.fullname($user).'</a></strong>';
@@ -606,7 +616,7 @@ if(false) {
                     $profilelink = '<strong>'.fullname($user).'</strong>';
                 }
 
-                $data = array ($OUTPUT->user_picture($user, array('size' => 35, 'courseid'=>$course->id)), $profilelink);
+                $data = array ($OUTPUT->user_picture($user, array('size' => 100, 'courseid'=>$course->id)), $profilelink);
 
                 if ($mode === MODE_NAMES) {
                     foreach ($extrafields as $field) {
