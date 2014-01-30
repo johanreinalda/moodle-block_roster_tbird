@@ -606,7 +606,7 @@ if(false) {
                     $profilelink = '<strong>'.fullname($user).'</strong>';
                 }
 
-                $data = array ($OUTPUT->user_picture($user, array('size' => 35, 'courseid'=>$course->id)), $profilelink);
+                $data = array ($OUTPUT->user_picture($user, array('size' => 100, 'courseid'=>$course->id)), $profilelink);
 
                 if ($mode === MODE_NAMES) {
                     foreach ($extrafields as $field) {
