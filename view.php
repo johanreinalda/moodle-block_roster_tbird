@@ -87,6 +87,9 @@
         require_capability('moodle/course:viewparticipants', $context);
     }
 
+    $picsperrow = $CFG->block_roster_tbird_picsperrow;
+    $picsize = $CFG->block_roster_tbird_picsize;
+    
     //get the roles to show from global config.
     $rolestoshow = $CFG->block_roster_tbird_rolestoshow;
     if($rolestoshow == '') {
@@ -169,7 +172,6 @@
     } else {
         $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
     }
-
     if (isset($hiddenfields['lastaccess'])) {
         // do not allow access since filtering
         $accesssince = 0;
@@ -223,6 +225,15 @@
     $colnum = 0;
     $menuchoices = Array();
 	$menuchoices[$colnum] = new html_table_cell();
+	$menuchoices[$colnum]->attrutes['class'] = 'center';
+	if($mode == MODE_PICTURES) {
+		$menuchoices[$colnum]->text = get_string('linkpictures','block_roster_tbird');
+	} else {
+		$menuchoices[$colnum]->text = '<a title="'.get_string('listpictures','block_roster_tbird').'" href=' . $baseurl . '&mode=' . MODE_PICTURES . '>' . get_string('linkpictures','block_roster_tbird').'</a>';
+	}
+	
+	$colnum++;
+    $menuchoices[$colnum] = new html_table_cell();
 	$menuchoices[$colnum]->attrutes['class'] = 'center';
 	if($mode == MODE_NAMES) {
 		$menuchoices[$colnum]->text = get_string('linknames','block_roster_tbird');
@@ -283,7 +294,11 @@
         $tablecolumns[] = 'lastaccess';
         $tableheaders[] = get_string('lastaccess');
     }
-
+    //if($mode === MODE_PICTURES) {
+        //$tablecolumns = array('userpic');
+        //$tableheaders = array('User');
+        //unset($hiddenfields['lastaccess']);
+    //}
     $table = new flexible_table('user-index-participants-'.$course->id);
     $table->define_columns($tablecolumns);
     $table->define_headers($tableheaders);
@@ -315,9 +330,9 @@
     $table->setup();
 
     // we are looking for all users with this role assigned in this context or higher
-    $contextlist = get_related_contexts_string($context);
-    //$contextlist = $context->get_parent_context_ids(true);
-
+    $parents = $context->get_parent_context_ids(true);
+    $contextlist = implode(',' , $parents);
+    
     //list($esql, $params) = get_enrolled_sql($context, NULL, $currentgroup, true);
     list($esql, $params) = get_enrolled_sql($context, NULL, NULL, true);
     $joins = array("FROM {user} u");
@@ -325,9 +340,11 @@
 
     $extrasql = get_extra_user_fields_sql($context, 'u', '', array(
             'id', 'username', 'firstname', 'lastname', 'email', 'city', 'country', 'description',
+            'middlename', 'alternatename', 'firstnamephonetic','lastnamephonetic',
             'picture', 'lang', 'timezone', 'maildisplay', 'imagealt', 'lastaccess'));
 
-    $select = "SELECT u.id, u.username, u.firstname, u.lastname,
+    $select = "SELECT u.id, u.username, u.firstname, u.lastname, u.middlename,
+                      u.firstnamephonetic, u.lastnamephonetic, u.alternatename,
                       u.email, u.city, u.country, u.description, u.picture,
                       u.lang, u.timezone, u.maildisplay, u.imagealt,
                       COALESCE(ul.timeaccess, 0) AS lastaccess$extrasql";
@@ -355,11 +372,11 @@
     
     //this lists all roles, but teacher, and non-editing teacher
     //if ($roleid) {
-        //$wheres[] = "u.id IN (SELECT userid FROM {role_assignments} WHERE roleid = :roleid AND contextid $contextlist)";
+        //$wheres[] = "u.id IN (SELECT userid FROM {role_assignments} WHERE roleid = :roleid AND contextid IN ($contextlist))";
         //hardcode roles to avoid:
-        //$wheres[] = "u.id IN (SELECT userid FROM {role_assignments} WHERE roleid != 3 and roleid != 4 AND contextid $contextlist)";
+        //$wheres[] = "u.id IN (SELECT userid FROM {role_assignments} WHERE roleid != 3 and roleid != 4 AND contextid IN ($contextlist))";
     	//use globally set roles to show in report
-    	$wheres[] = "u.id IN (SELECT userid FROM {role_assignments} WHERE roleid IN ($rolestoshow) AND contextid $contextlist)";
+    	$wheres[] = "u.id IN (SELECT userid FROM {role_assignments} WHERE roleid IN ($rolestoshow) AND contextid IN ($contextlist))";
     	$params['roleid'] = $roleid;
     //}
     //need to force roleid = 0;
@@ -403,6 +420,10 @@
         $sort = '';
     }
 
+    if($mode === MODE_PICTURES) {
+        $sort = ' ORDER BY u.lastname';
+    }
+    
     $matchcount = $DB->count_records_sql("SELECT COUNT(u.id) $from $where", $params);
 
     $table->pagesize($perpage, $matchcount);
@@ -456,8 +477,8 @@
                     }
                     $usersprinted[] = $user->id; /// Add new user to the array of users printed
 
-                    context_instance_preload($user);
-
+                    context_helper::preload_from_record($user);
+                    
                     $context = context_course::instance($course->id);
                     $usercontext = context_user::instance($user->id);
 
@@ -573,7 +594,7 @@ if(false) {
             }
         }
 
-    } else {	//if $mode
+    } else if($mode === MODE_NAMES) {	//if $mode
         $countrysort = (strpos($sort, 'country') !== false);
         $timeformat = get_string('strftimedate');
 
@@ -616,7 +637,7 @@ if(false) {
                     $profilelink = '<strong>'.fullname($user).'</strong>';
                 }
 
-                $data = array ($OUTPUT->user_picture($user, array('size' => 100, 'courseid'=>$course->id)), $profilelink);
+                $data = array ($OUTPUT->user_picture($user, array('size' => 150, 'courseid'=>$course->id)), $profilelink);
 
                 if ($mode === MODE_NAMES) {
                     foreach ($extrafields as $field) {
@@ -662,6 +683,55 @@ if(false) {
 
         $table->print_html();
 
+    } else if($mode === MODE_PICTURES) {	//if $mode
+        $itemsperrow = 4;
+        if ($totalcount < 1) {
+            echo $OUTPUT->heading(get_string('nothingtodisplay'));
+        } else {
+            $usersprinted = array();
+            $rowcount = 0;
+            $itemcount = 0;
+            $table;
+            $row;
+            foreach ($userlist as $user) {
+                if (in_array($user->id, $usersprinted)) { /// Prevent duplicates by r.hidden - MDL-13935
+                    continue;
+                }
+                $usersprinted[] = $user->id; /// Add new user to the array of users printed
+
+                context_helper::preload_from_record($user);
+                
+                $context = context_course::instance($course->id);
+                $usercontext = context_user::instance($user->id);
+                
+                $table->attributes['class'] = 'roster_small_table';
+
+                if($itemcount == 0) {
+                    $table = new html_table();
+                    $row = new html_table_row();
+                    $rowcount++;
+                }
+                
+                $row->cells[$itemcount] = new html_table_cell();
+                $row->cells[$itemcount]->attributes['class'] = 'roster_small_cell';
+
+                $imagelink = $OUTPUT->user_picture($user, array('size' => $picsize, 'courseid'=>$course->id));
+                $nametext =  $OUTPUT->container(fullname($user, has_capability('moodle/site:viewfullnames', $context)), 'roster_small_username'); 
+                $row->cells[$itemcount]->text = '<center>' . $imagelink . '<br />' . $nametext . '</center>';
+                $itemcount++;
+
+                if($itemcount == $picsperrow) {
+                    $table->data = array($row);
+                    echo html_writer::table($table);
+                    $itemcount = 0;
+                }
+            }
+            // still users left?
+            if($itemcount) {
+                $table->data = array($row);
+                echo html_writer::table($table);
+            }
+        }
     }
 
     if (has_capability('moodle/site:viewparticipants', $context) && $totalcount > ($perpage*3)) {

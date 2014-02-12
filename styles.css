@@ -170,3 +170,14 @@
   border-style: solid;
   border-color: gray;
 }
+
+table.roster_small_table {
+  text-align: center;
+}
+td.roster_small_cell {
+	
+}
+div.roster_small_username {
+  font-size: 18px;
+  font-style: bold;
+}

@@ -101,6 +101,11 @@ class block_roster_tbird extends block_list {
 			
 			//no need to check for is_null($this->config), since we use formelement "advcheckbox" in edit_form.php
 			$basehref = $CFG->wwwroot.'/blocks/roster_tbird/view.php?contextid='. $coursecontext->id .'&mode=';
+			if ($this->config->flaglinkpictures) {
+				//$this->content->items[] = $this->_roster_link(MODE_PICTURES,$coursecontext->id);
+				$this->content->items[] = '<a title="'.get_string('listpictures','block_roster_tbird').'" href="' . $basehref . MODE_PICTURES . '">' . get_string('linkpictures', 'block_roster_tbird'). '</a>'; 
+				$this->content->icons[] = $icon_code;
+			}
 			if ($this->config->flaglinknames) {
 				//$this->content->items[] = $this->_roster_link(MODE_BRIEF,$coursecontext->id);
 				$this->content->items[] = '<a title="'.get_string('listnames','block_roster_tbird').'" href="' . $basehref . MODE_NAMES . '">' . get_string('linknames', 'block_roster_tbird'). '</a>'; 
