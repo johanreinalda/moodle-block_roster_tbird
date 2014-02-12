@@ -86,6 +86,9 @@
         require_capability('moodle/course:viewparticipants', $context);
     }
 
+    $picsperrow = $CFG->block_roster_tbird_picsperrow;
+    $picsize = $CFG->block_roster_tbird_picsize;
+    
     //get the roles to show from global config.
     $rolestoshow = $CFG->block_roster_tbird_rolestoshow;
     if($rolestoshow == '') {
@@ -168,7 +171,6 @@
     } else {
         $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
     }
-
     if (isset($hiddenfields['lastaccess'])) {
         // do not allow access since filtering
         $accesssince = 0;
@@ -222,6 +224,15 @@
     $colnum = 0;
     $menuchoices = Array();
 	$menuchoices[$colnum] = new html_table_cell();
+	$menuchoices[$colnum]->attrutes['class'] = 'center';
+	if($mode == MODE_PICTURES) {
+		$menuchoices[$colnum]->text = get_string('linkpictures','block_roster_tbird');
+	} else {
+		$menuchoices[$colnum]->text = '<a title="'.get_string('listpictures','block_roster_tbird').'" href=' . $baseurl . '&mode=' . MODE_PICTURES . '>' . get_string('linkpictures','block_roster_tbird').'</a>';
+	}
+	
+	$colnum++;
+    $menuchoices[$colnum] = new html_table_cell();
 	$menuchoices[$colnum]->attrutes['class'] = 'center';
 	if($mode == MODE_NAMES) {
 		$menuchoices[$colnum]->text = get_string('linknames','block_roster_tbird');
@@ -282,7 +293,11 @@
         $tablecolumns[] = 'lastaccess';
         $tableheaders[] = get_string('lastaccess');
     }
-
+    //if($mode === MODE_PICTURES) {
+        //$tablecolumns = array('userpic');
+        //$tableheaders = array('User');
+        //unset($hiddenfields['lastaccess']);
+    //}
     $table = new flexible_table('user-index-participants-'.$course->id);
     $table->define_columns($tablecolumns);
     $table->define_headers($tableheaders);
@@ -394,6 +409,10 @@
         $sort = '';
     }
 
+    if($mode === MODE_PICTURES) {
+        $sort = ' ORDER BY u.lastname';
+    }
+    
     $matchcount = $DB->count_records_sql("SELECT COUNT(u.id) $from $where", $params);
 
     $table->pagesize($perpage, $matchcount);
@@ -564,7 +583,7 @@ if(false) {
             }
         }
 
-    } else {	//if $mode
+    } else if($mode === MODE_NAMES) {	//if $mode
         $countrysort = (strpos($sort, 'country') !== false);
         $timeformat = get_string('strftimedate');
 
@@ -606,7 +625,7 @@ if(false) {
                     $profilelink = '<strong>'.fullname($user).'</strong>';
                 }
 
-                $data = array ($OUTPUT->user_picture($user, array('size' => 100, 'courseid'=>$course->id)), $profilelink);
+                $data = array ($OUTPUT->user_picture($user, array('size' => 150, 'courseid'=>$course->id)), $profilelink);
 
                 if ($mode === MODE_NAMES) {
                     foreach ($extrafields as $field) {
@@ -652,6 +671,55 @@ if(false) {
 
         $table->print_html();
 
+    } else if($mode === MODE_PICTURES) {	//if $mode
+        $itemsperrow = 4;
+        if ($totalcount < 1) {
+            echo $OUTPUT->heading(get_string('nothingtodisplay'));
+        } else {
+            $usersprinted = array();
+            $rowcount = 0;
+            $itemcount = 0;
+            $table;
+            $row;
+            foreach ($userlist as $user) {
+                if (in_array($user->id, $usersprinted)) { /// Prevent duplicates by r.hidden - MDL-13935
+                    continue;
+                }
+                $usersprinted[] = $user->id; /// Add new user to the array of users printed
+
+                context_instance_preload($user);
+
+                $context = get_context_instance(CONTEXT_COURSE, $course->id);
+                $usercontext = get_context_instance(CONTEXT_USER, $user->id);
+
+                $table->attributes['class'] = 'roster_small_table';
+
+                if($itemcount == 0) {
+                    $table = new html_table();
+                    $row = new html_table_row();
+                    $rowcount++;
+                }
+                
+                $row->cells[$itemcount] = new html_table_cell();
+                $row->cells[$itemcount]->attributes['class'] = 'roster_small_cell';
+
+                $imagelink = $OUTPUT->user_picture($user, array('size' => $picsize, 'courseid'=>$course->id));
+                $nametext =  $OUTPUT->container(fullname($user, has_capability('moodle/site:viewfullnames', $context)), 'roster_small_username'); 
+                $row->cells[$itemcount]->text = '<center>' . $imagelink . '<br />' . $nametext . '</center>';
+                $itemcount++;
+
+                if($itemcount == $picsperrow) {
+                    $table->data = array($row);
+                    echo html_writer::table($table);
+                    $itemcount = 0;
+                }
+            }
+            // still users left?
+            if($itemcount) {
+                $table->data = array($row);
+                echo html_writer::table($table);
+            }
+        }
     }
 
     if (has_capability('moodle/site:viewparticipants', $context) && $totalcount > ($perpage*3)) {

@@ -40,6 +40,9 @@ class block_roster_tbird_edit_form extends block_edit_form {
         $mform->setDefault('config_title', get_string('blocktitle', 'block_roster_tbird'));
         $mform->setType('config_title', PARAM_MULTILANG);
         
+        $mform->addElement('advcheckbox', 'config_flaglinkpictures', get_string('configflagpictures', 'block_roster_tbird'));
+        $mform->setDefault('config_flaglinkpictures',1);
+        
         $mform->addElement('advcheckbox', 'config_flaglinknames', get_string('configflagnames', 'block_roster_tbird'));
         $mform->setDefault('config_flaglinknames',1);
         

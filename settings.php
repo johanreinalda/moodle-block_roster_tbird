@@ -38,5 +38,13 @@ if ($ADMIN->fulltree) {
 	//note we store the variable globally (not block specific), so we can get to it from view.php
 	$settings->add(new admin_setting_configmulticheckbox('block_roster_tbird_rolestoshow', get_string('rolestoshow', 'block_roster_tbird'),
 			get_string('rolestoshowdescription', 'block_roster_tbird'), $default, $choices));
+	
+	$settings->add(new admin_setting_configtext('block_roster_tbird_picsperrow', get_string('picsperrow', 'block_roster_tbird'),
+	        get_string('picsperrowdescr', 'block_roster_tbird'),
+	        5, PARAM_INT, 5 ));
+	
+	$settings->add(new admin_setting_configtext('block_roster_tbird_picsize', get_string('picsize', 'block_roster_tbird'),
+	        get_string('picsizedescr', 'block_roster_tbird'),
+	        200, PARAM_INT, 5 ));
 }
 

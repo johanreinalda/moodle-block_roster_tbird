@@ -26,11 +26,13 @@
 $string['pluginname'] = 'Roster';
 $string['blocktitle'] = 'Roster';
 $string['setblocktitle'] = 'Block title';
+$string['linkpictures'] = 'Pictures';
 $string['linknames'] = 'Names';
 $string['linkdetails'] = 'Full Details';
 $string['linkdescription'] = 'Descriptions';
 $string['linkusermanagement'] = 'Filter &amp; Sort';
 
+$string['configflagpictures'] = 'Show Picture and Names';
 $string['configflagnames'] = 'Show Names and Email Link';
 $string['configflagfull'] = 'Show Full Details Link';
 $string['configflagdescription'] = 'Show Full Details And Description Link';
@@ -50,8 +52,14 @@ $string['lastaccess'] = 'Last Access';
 $string['peopleincourse'] = 'People in';
 $string['nopeopleincourse'] = 'There are no people in';
 
+$string['picsperrow'] = '# pictures per row';
+$string['picsperrowdescr'] = 'Number of pictures per row in Picture view';
+$string['picsize'] = 'Picture size';
+$string['picsizedescr'] = 'Picture size in pixels';
+
 $string['roster'] = 'Roster';
 $string['rosterformat'] = 'Roster format: ';
+$string['listpictures'] = 'Show list of pictures and names';
 $string['listnames'] = 'Show list of names and emails';
 $string['listdetails'] = 'Show list of names, emails and pictures';
 $string['listdescriptions'] = 'Show list of full details including profile descriptions';
