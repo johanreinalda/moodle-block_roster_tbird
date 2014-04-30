@@ -31,9 +31,13 @@ This block will show a list of options for the roster. The roster will be genera
 depending on the option clicked.
 
 Names - a list of student names, with their photos, email address, city/town, country and last access
+
 Description - a list of student names, photo, and their profile description.
   This helps faculty with a quick overview of the students and their backgrounds. Useful when assigning
   groups to make sure you get diversity in student experiences.
+
+Pictures - a list of profile photos, for an easy cheat sheet for faculty
+
 Filter & Sort -  this links to the regular Moodle built-in participant Filter & Sort functionailty 
      
 	
