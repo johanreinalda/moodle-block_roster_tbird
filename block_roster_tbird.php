@@ -61,7 +61,7 @@ class block_roster_tbird extends block_list {
 	}
 
     public function get_content() {
-        global $COURSE, $CFG;
+        global $COURSE, $CFG, $OUTPUT;
         
         if ($this->content !== null) {
         	return $this->content;
@@ -97,8 +97,8 @@ class block_roster_tbird extends block_list {
 			$this->content->footer = '';
 
 			//$icon_code = '<img src="'.$CFG->pixpath.'/i/users.gif" class="icon" alt="" />';
-			$icon_code = html_writer::empty_tag('img', array('src' => '/pix/i/users.gif', 'class' => 'icon'));
-			
+			$icon_code = html_writer::empty_tag('img', array('src' => $CFG->wwwroot.'/pix/i/users.png', 'class' => 'icon'));
+				
 			//no need to check for is_null($this->config), since we use formelement "advcheckbox" in edit_form.php
 			$basehref = $CFG->wwwroot.'/blocks/roster_tbird/view.php?contextid='. $coursecontext->id .'&mode=';
 			if (isset($this->config->flaglinkpictures) and $this->config->flaglinkpictures) {

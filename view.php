@@ -266,7 +266,7 @@
 	
 	$menutable = new html_table();
 	//$menutable->attributes['class'] = 'controls';
-	$menustable->cellspacing = 0;
+	$menutable->cellspacing = 0;
 	$menutable->data[] = $menuchoices;
 	
 	echo html_writer::table($menutable);

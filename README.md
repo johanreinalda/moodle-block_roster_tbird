@@ -39,4 +39,7 @@ Filter & Sort -  this links to the regular Moodle built-in participant Filter & 
 	
 VERSION CHANGES:
 
-2013052000 - Initial version
+2014040300 - v1.1 with bugfixes for relative images in navigation and cell spacing,
+             Thanks to 'Paradiesgestalter'.
+2014021200 - v1.1 for Moodle 2.3, 2.4 & 2.6
+2013052000 - Initial version 1.0, for Moodle 2.3
