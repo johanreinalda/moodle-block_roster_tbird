@@ -1,5 +1,5 @@
 This is a block with a modified course roster.
-(c) 2013, Thunderbird School of Global Management
+(c) 2013-2014, Thunderbird School of Global Management
 Written by Johan Reinalda,  johan dot reinalda at thunderbird dot edu
 
 DESCRIPTION:
@@ -22,7 +22,11 @@ USAGE:
 * next, configure it. Click on the Settings link behind the block. Go to Site Admin => Modules => Blocks
   Settings:
   -what roles to show as student in the roster page. By default, this is only the "Student' role.
-
+  -for the 'Pictures' display, set the number of pictures per row, and the size of the image. 
+  -if you do not want 'Last Accessed' in the Names or Description display, check the box.
+  (You can also make the 'Last Accessed' field globally hidden for most users, see
+  Site Admin => Users => Permissions => User Policies => Hide user fields )
+   
 * add to a course as usual.
 
 OUTPUT:
@@ -43,6 +47,7 @@ Filter & Sort -  this links to the regular Moodle built-in participant Filter & 
 	
 VERSION CHANGES:
 
+2014050100 - v1.2 optional removing of 'Last Accessed' from rosters
 2014040300 - v1.1 with bugfixes for relative images in navigation and cell spacing,
              Thanks to Bernhard Harrer.
 2014021200 - v1.1 for Moodle 2.3, 2.4 & 2.6

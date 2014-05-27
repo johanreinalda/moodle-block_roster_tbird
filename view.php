@@ -89,6 +89,7 @@
 
     $picsperrow = $CFG->block_roster_tbird_picsperrow;
     $picsize = $CFG->block_roster_tbird_picsize;
+    $removelastaccessed = $CFG->block_roster_tbird_removelastaccessed;
     
     //get the roles to show from global config.
     $rolestoshow = $CFG->block_roster_tbird_rolestoshow;
@@ -124,7 +125,14 @@
         }
     }
 
-    add_to_log($course->id, 'user', 'view roster', 'view.php?id='.$course->id, '');
+    // deprecated:
+    // add_to_log($course->id, 'user', 'view roster', 'view.php?id='.$course->id, '');
+//    $event = \block_roster_tbird\event\course_module_viewed::create(array(
+//            'objectid' => $PAGE->cm->instance,
+//            'context' => $context,
+//    ));
+//    $event->add_record_snapshot('course', $PAGE->course);
+//    $event->trigger();
 
     $countries = get_string_manager()->get_list_of_countries();
 
@@ -172,7 +180,7 @@
     } else {
         $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
     }
-    if (isset($hiddenfields['lastaccess'])) {
+    if (isset($hiddenfields['lastaccess']) or $removelastaccessed) {
         // do not allow access since filtering
         $accesssince = 0;
     }
@@ -537,7 +545,7 @@
                         $row->cells[1]->text .= '<br />';
                     }
 
-                    if (!isset($hiddenfields['lastaccess'])) {
+                    if (!$removelastaccessed and !isset($hiddenfields['lastaccess'])) {
                         if ($user->lastaccess) {
                             $row->cells[1]->text .= get_string('lastaccess').get_string('labelsep', 'langconfig').userdate($user->lastaccess);
                             $row->cells[1]->text .= '&nbsp; ('. format_time(time() - $user->lastaccess, $datestring) .')';
@@ -650,7 +658,7 @@ if(false) {
                 if ($mode === MODE_NAMES && !isset($hiddenfields['country'])) {
                     $data[] = $country;
                 }
-                if (!isset($hiddenfields['lastaccess'])) {
+                if (!$removelastaccessed and !isset($hiddenfields['lastaccess'])) {
                     $data[] = $lastaccess;
                 }
 

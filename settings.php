@@ -46,5 +46,9 @@ if ($ADMIN->fulltree) {
 	$settings->add(new admin_setting_configtext('block_roster_tbird_picsize', get_string('picsize', 'block_roster_tbird'),
 	        get_string('picsizedescr', 'block_roster_tbird'),
 	        200, PARAM_INT, 5 ));
+	
+	$settings->add(new admin_setting_configcheckbox('block_roster_tbird_removelastaccessed', get_string('removelastaccessed', 'block_roster_tbird'),
+	        get_string('removelastaccesseddescr', 'block_roster_tbird'), 0));
+	
 }
 
