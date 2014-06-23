@@ -26,16 +26,13 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-	$choices = Array();
 	// get all the global roles
-	$allroles = get_all_roles();
-	foreach ($allroles as $role) {
-		$choices[$role->id] = '&nbsp;' . $role->name;
-	}
+    $choices =  role_fix_names(get_all_roles(), null, ROLENAME_ORIGINAL, true);
 	$default = Array();
 	$default[5] = 1;	//5 = Student
-	//and then allow each role to be selected for showing in the roster reports.
-	//note we store the variable globally (not block specific), so we can get to it from view.php
+	// and then allow each role to be selected for showing in the roster reports.
+	// note we store the variable globally (not block specific), so we can get to it from view.php
+	// note that we do not use admin_setting_pickroles() since we cannot set defaults there.
 	$settings->add(new admin_setting_configmulticheckbox('block_roster_tbird_rolestoshow', get_string('rolestoshow', 'block_roster_tbird'),
 			get_string('rolestoshowdescription', 'block_roster_tbird'), $default, $choices));
 	
@@ -47,4 +44,3 @@ if ($ADMIN->fulltree) {
 	        get_string('picsizedescr', 'block_roster_tbird'),
 	        200, PARAM_INT, 5 ));
 }
-
