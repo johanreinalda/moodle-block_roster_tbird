@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2014052700;
+$plugin->version = 2014062300;
 $plugin->requires  = 2014051200;        // Requires this Moodle version, 2.7
 $plugin->component = 'block_roster_tbird'; // Full name of the plugin (used for diagnostics)
 $plugin->maturity = MATURITY_STABLE;
