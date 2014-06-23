@@ -72,3 +72,6 @@ $string['rolestoshowdescription'] = 'Select which roles to show in roster report
 $string['roster_tbird:addinstance'] = 'Add a new Roster block';
 $string['roster_tbird:myaddinstance'] = '';
 
+$string['removelastaccessed'] = 'Remove Last Accessed';
+$string['removelastaccesseddescr'] = 'If checked, remove \'Last Accessed\' from all roster pages';
+        
